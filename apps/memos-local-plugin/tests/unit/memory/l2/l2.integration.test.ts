@@ -1117,7 +1117,7 @@ describe("memory/l2/integration", () => {
         repos: handle.repos,
         llm: fakeLlm({
           completeJson: {
-            "l2.l2.induction.v3": {
+            "l2.l2.induction.v2": {
               title: "mixed bucket induction",
               trigger: "mixed trigger",
               procedure: "mixed procedure",
@@ -1496,7 +1496,7 @@ describe("memory/l2/integration", () => {
         repos: handle.repos,
         llm: fakeLlm({
           completeJson: {
-            "l2.l2.induction.v3": {
+            "l2.l2.induction.v2": {
               title: "oor bucket",
               trigger: "oor bucket trigger",
               procedure: "oor bucket procedure",

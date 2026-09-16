@@ -26,7 +26,13 @@ export interface L2SubscriberDeps {
   db: StorageDb;
   repos: Pick<
     Repos,
-    "candidatePool" | "embeddingRetryQueue" | "gainRepair" | "policies" | "tracePolicyLinks" | "traces"
+    | "candidatePool"
+    | "embeddingRetryQueue"
+    | "episodes"
+    | "gainRepair"
+    | "policies"
+    | "tracePolicyLinks"
+    | "traces"
   >;
   rewardBus: RewardEventBus;
   l2Bus: L2EventBus;

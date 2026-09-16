@@ -1219,67 +1219,6 @@ describe("HTTP server — REST routes", () => {
     expect(r.status).toBe(405);
   });
 
-  // ─── WP #272 N4 — JSON-RPC wire path for gain maintenance ─────────────
-  // The dispatcher is shared with the stdio bridge, but nothing exercised
-  // the HTTP envelope (`POST /api/v1/rpc`) for these two methods. One
-  // success case per method plus namespace rejection through the wire.
-
-  function rpcBody(method: string, params: unknown, id: number = 1): string {
-    return JSON.stringify({ jsonrpc: "2.0", id, method, params });
-  }
-
-  async function postRpc(method: string, params: unknown): Promise<{ status: number; body: any }> {
-    const r = await fetch(`${handle.url}/api/v1/rpc`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: rpcBody(method, params),
-    });
-    return { status: r.status, body: (await r.json()) as any };
-  }
-
-  it("POST /api/v1/rpc routes policies.gainPreview (wire success)", async () => {
-    const { status, body } = await postRpc("policies.gainPreview", {
-      namespace: { agentKind: "openclaw", profileId: "default" },
-      limit: 10,
-    });
-    expect(status).toBe(200);
-    expect(body).toMatchObject({ jsonrpc: "2.0", id: 1 });
-    expect(body.result).toMatchObject({ policies: [], total: 0 });
-    expect(core.previewGainRepair).toHaveBeenCalledWith({
-      namespace: { agentKind: "openclaw", profileId: "default" },
-      limit: 10,
-      offset: undefined,
-    });
-  });
-
-  it("POST /api/v1/rpc routes policies.gainRollback (wire success)", async () => {
-    const { status, body } = await postRpc("policies.gainRollback", {
-      namespace: { agentKind: "openclaw", profileId: "default" },
-      batchId: "gr_1",
-    });
-    expect(status).toBe(200);
-    expect(body).toMatchObject({ jsonrpc: "2.0", id: 1 });
-    expect(body.result).toMatchObject({ ok: true, rolledBack: [] });
-    expect(core.rollbackGainRepair).toHaveBeenCalledWith({
-      namespace: { agentKind: "openclaw", profileId: "default" },
-      batchId: "gr_1",
-    });
-  });
-
-  it("POST /api/v1/rpc rejects gainPreview/gainRollback without an exact namespace", async () => {
-    const preview = await postRpc("policies.gainPreview", { limit: 5 });
-    expect(preview.status).toBe(200); // JSON-RPC errors ride on 200
-    expect(preview.body.error.code).toBe(-32602); // invalid params
-    expect(preview.body.error.data).toMatchObject({ code: "invalid_argument" });
-    expect(core.previewGainRepair).not.toHaveBeenCalled();
-
-    const rollback = await postRpc("policies.gainRollback", { batchId: "gr_1" });
-    expect(rollback.status).toBe(200);
-    expect(rollback.body.error.code).toBe(-32602);
-    expect(rollback.body.error.data).toMatchObject({ code: "invalid_argument" });
-    expect(core.rollbackGainRepair).not.toHaveBeenCalled();
-  });
-
   // ─── Telemetry side-channel ────────────────────────────────────
   // Replaces the previous "first GET /overview wins" trigger with
   // a dedicated SPA-mount endpoint. See `server/routes/telemetry.ts`

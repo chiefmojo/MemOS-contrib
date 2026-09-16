@@ -476,7 +476,7 @@ describe("reward/integration", () => {
       feedbackRepo: handle.repos.feedback,
       llm: fakeLlm({
         completeJson: {
-          "reward.reward.r_human.v6": {
+          "reward.reward.r_human.v3": {
             goal_achievement: 0.9,
             process_quality: 0.7,
             user_satisfaction: 0.8,
@@ -525,7 +525,7 @@ describe("reward/integration", () => {
     let scoreCall = 0;
     const llm = fakeLlm({
       completeJson: {
-        "reward.reward.r_human.v6": () => {
+        "reward.reward.r_human.v3": () => {
           scoreCall += 1;
           if (scoreCall === 1) {
             return {
@@ -594,7 +594,7 @@ describe("reward/integration", () => {
       feedbackRepo: handle.repos.feedback,
       llm: fakeLlm({
         completeJson: {
-          "reward.reward.r_human.v6": {
+          "reward.reward.r_human.v3": {
             goal_achievement: 0.9,
             process_quality: 0.7,
             user_satisfaction: 0.8,
@@ -675,7 +675,7 @@ describe("reward/integration", () => {
       feedbackRepo: handle.repos.feedback,
       llm: fakeLlm({
         completeJson: {
-          "reward.reward.r_human.v6": {
+          "reward.reward.r_human.v3": {
             goal_achievement: 0.9,
             process_quality: 0.7,
             user_satisfaction: 0.8,

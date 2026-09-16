@@ -353,7 +353,7 @@ const AlgorithmSchema = Type.Object({
      * WP #272 — override for the per-boot historical inference pass's group
      * cap (`GAIN_INFERENCE_BOOT_MAX_GROUPS` default). Raise on hosts whose
      * backlog doesn't converge in one restart under the time budget; a large
-     * corpus (e.g. Faye) can need several thousand groups per pass.
+     * corpus can need several thousand groups per pass.
      */
     gainInferenceBootMaxGroups: Type.Integer({ default: 2_000, minimum: 1 }),
     /**
